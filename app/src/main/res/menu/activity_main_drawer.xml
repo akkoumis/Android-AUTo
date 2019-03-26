@@ -5,6 +5,13 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/menu_search_route"
+            android:title="Αναζήτηση Διαδρομής" />
+        <item
+            android:id="@+id/menu_my_vehicles"
+            android:title="Τα οχήματά μου"
+             /><!--android:onClick="viewMyVehicles"-->
+        <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             android:title="Import" />

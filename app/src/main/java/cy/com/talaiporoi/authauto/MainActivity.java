@@ -1,5 +1,6 @@
 package cy.com.talaiporoi.authauto;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -98,4 +99,13 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    /** Called when the user taps the My vehicles button */
+    public void viewMyVehicles(View view) {
+        Intent intent = new Intent(this, MyVehiclesActivity.class);
+
+        startActivity(intent);
+
+    }
+
 }
