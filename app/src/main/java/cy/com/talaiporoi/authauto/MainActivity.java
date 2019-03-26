@@ -100,12 +100,13 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /** Called when the user taps the My vehicles button */
-    public void viewMyVehicles(View view) {
+
+    /**
+     * Called when the user taps the My vehicles button
+     */
+    public void viewMyVehicles(MenuItem item) {
         Intent intent = new Intent(this, MyVehiclesActivity.class);
 
         startActivity(intent);
-
     }
-
 }

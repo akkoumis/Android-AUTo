@@ -9,8 +9,8 @@
             android:title="Αναζήτηση Διαδρομής" />
         <item
             android:id="@+id/menu_my_vehicles"
-            android:title="Τα οχήματά μου"
-             /><!--android:onClick="viewMyVehicles"-->
+            android:onClick="viewMyVehicles"
+            android:title="@string/title_activity_my_vehicles" /><!---->
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
