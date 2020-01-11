@@ -2,9 +2,12 @@
     <string name="app_name">AUTh AUTo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Αναστάσιος Κουμής</string>
+    <string name="nav_header_subtitle">akkoumis@ece.auth.gr</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_my_vehicles">Τα οχήματά μου</string>
+    <string name="title_activity_my_vehicles">Λίστα Οχημάτων</string>
+    <string name="action_my_vehicles">Τα οχήματά μου</string>
+    <string name="title_activity_main">Επιλογή Διαδρομής</string>
+    <string name="action_add_vehicle">Προσθήκη Οχήματος</string>
 </resources>
