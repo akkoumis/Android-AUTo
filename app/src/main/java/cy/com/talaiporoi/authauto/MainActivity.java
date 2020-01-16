@@ -13,6 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import com.BoardiesITSolutions.AndroidMySQLConnector.Connection;
+import com.BoardiesITSolutions.AndroidMySQLConnector.Exceptions.InvalidSQLPacketException;
+import com.BoardiesITSolutions.AndroidMySQLConnector.Exceptions.MySQLConnException;
+import com.BoardiesITSolutions.AndroidMySQLConnector.Exceptions.MySQLException;
+import com.BoardiesITSolutions.AndroidMySQLConnector.IConnectionInterface;
+import com.BoardiesITSolutions.AndroidMySQLConnector.IResultInterface;
+import com.BoardiesITSolutions.AndroidMySQLConnector.ResultSet;
+import com.BoardiesITSolutions.AndroidMySQLConnector.Statement;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,9 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity
     private void login() {
         Log.d("koumis", "Executing SELECT...");
         Statement statement = mysqlConnection.createStatement();
-        statement.executeQuery("show schemas", new IResultInterface() {
+        statement.executeQuery("SELECT DATABASE();", new IResultInterface() {
             @Override
             public void executionComplete(ResultSet resultSet) {
                 //Toast toast = Toast.makeText(getApplicationContext(), "Number of rows = " + resultSet.getNumRows(), Toast.LENGTH_SHORT);
