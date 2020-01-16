@@ -6,13 +6,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        tools:replace="android:icon"
         android:allowBackup="true"
         android:icon="@mipmap/launcher_auth_auto"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <activity android:name=".LoginActivity"></activity>
         <activity
             android:name=".MyVehiclesActivity"
             android:label="@string/title_activity_my_vehicles"

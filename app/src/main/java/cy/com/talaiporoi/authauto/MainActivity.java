@@ -60,59 +60,10 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);*/
 
-        connectToDB();
 
 
     }
 
-    private void login() {
-        Log.d("koumis", "Executing SELECT...");
-
-    }
-
-    private void connectToDB() {
-
-        try{
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            Log.d("koumis", "DB Connecting...");
-
-            conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/authauto","root","root");
-
-            //STEP 4: Execute a query
-            Log.d("koumis","Creating statement...");
-            stmt = conn.createStatement();
-            String sql;
-            sql = "show schemas";
-            ResultSet rs = stmt.executeQuery(sql);
-
-            while(rs.next()){
-                Log.d("koumis",rs.getString(0));
-            }
-
-        }catch(SQLException se){
-            //Handle errors for JDBC
-            Log.d("koumis","SQLException Error");
-
-        }catch(Exception e){
-            //Handle errors for Class.forName
-            Log.d("koumis","Exception Error");
-
-        }finally{
-            //finally block used to close resources
-            try{
-                if(stmt!=null)
-                    stmt.close();
-            }catch(SQLException se2){
-            }// nothing we can do
-            try{
-                if(conn!=null)
-                    conn.close();
-            }catch(SQLException se){
-                se.printStackTrace();
-            }//end finally try
-        }//end try
-
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
