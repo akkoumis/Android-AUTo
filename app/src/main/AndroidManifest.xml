@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cy.com.talaiporoi.authauto">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         tools:replace="android:icon"
         android:allowBackup="true"

@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
@@ -72,8 +73,9 @@ public class MainActivity extends AppCompatActivity
     private void connectToDB() {
 
         try{
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
             Log.d("koumis", "DB Connecting...");
+
             conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/authauto","root","root");
 
             //STEP 4: Execute a query
