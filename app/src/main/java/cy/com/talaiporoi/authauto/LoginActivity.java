@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static android.database.DatabaseUtils.sqlEscapeString;
 import static android.view.View.GONE;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
     Button loginButton, registerButton;
+    EditText emailText, passwordText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +48,24 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         loginButton = (Button) findViewById(R.id.loginButton);
         registerButton = (Button) findViewById(R.id.registerButton);
+        emailText = (EditText) findViewById(R.id.emailText);
+        passwordText = (EditText) findViewById(R.id.passwordText);
 
     }
 
-    public void login(View v){
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_READ_CUSTOMERS, null, CODE_GET_REQUEST);
+    public void login(View v) {
+        String emailString = sqlEscapeString(emailText.getText().toString()),
+                passwordString = sqlEscapeString(passwordText.getText().toString());
+        emailString = emailString.substring(1, emailString.length() - 1);
+        passwordString = passwordString.substring(1, passwordString.length() - 1);
+
+        String url = Api.URL_READ_LOGIN + "&email=" + emailString + "&password=" + passwordString;
+        Log.d("koumis", "URL: " + url);
+        PerformNetworkRequest request = new PerformNetworkRequest(url, null, CODE_GET_REQUEST);
         request.execute();
     }
 
-    public void register(View v){
+    public void register(View v) {
 
     }
 
@@ -90,18 +102,26 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("koumis", "Post-execution of request...");
+            Log.d("koumis", "Code = " + requestCode);
+            Log.d("koumis", s);
             progressBar.setVisibility(GONE);
+
             try {
                 JSONObject object = new JSONObject(s);
-                if (!object.getBoolean("error")) {
-                    Log.d("koumis","Code = "+requestCode);
-                    Log.d("koumis",s);
+                if (!object.isNull("customer")) {
+                    //if (requestCode == CODE_GET_REQUEST) {
+                    Log.d("koumis", "Login successful!");
+                    //}
                     //refreshing the herolist after every operation
                     //so we get an updated list
                     //we will create this method right now it is commented
                     //because we haven't created it yet
                     //refreshHeroList(object.getJSONArray("heroes"));
+                } else {
+                    Log.d("koumis", "Wrong login...");
+
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
