@@ -1,7 +1,9 @@
 package cy.com.talaiporoi.authauto;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,9 +28,10 @@ public class LoginActivity extends AppCompatActivity {
     private static final int CODE_GET_REQUEST = 1024;
     private static final int CODE_POST_REQUEST = 1025;
 
-    ProgressBar progressBar;
-    Button loginButton, registerButton;
-    EditText emailText, passwordText;
+    private ProgressBar progressBar;
+    private Button loginButton, registerButton;
+    private EditText emailText, passwordText;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+        constraintLayout= (ConstraintLayout)findViewById(R.id.loginConstraintLayout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         loginButton = (Button) findViewById(R.id.loginButton);
         registerButton = (Button) findViewById(R.id.registerButton);
@@ -107,10 +111,20 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.setVisibility(GONE);
 
             try {
+                SharedPreferences sharedPref;
+                sharedPref = getSharedPreferences("authauto", MODE_PRIVATE);
                 JSONObject object = new JSONObject(s);
                 if (!object.isNull("customer")) {
                     //if (requestCode == CODE_GET_REQUEST) {
                     Log.d("koumis", "Login successful!");
+                    Snackbar snackbar = Snackbar
+                            .make(constraintLayout, "Login Successful!", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+
+                    sharedPref.edit().putString("id", object.getString("id")).commit();
+                    sharedPref.edit().putString("username", object.getString("username")).commit();
+                    sharedPref.edit().putString("email", object.getString("email")).commit();
+                    sharedPref.edit().putString("password", object.getString("password")).commit();
                     //}
                     //refreshing the herolist after every operation
                     //so we get an updated list
@@ -120,6 +134,10 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Log.d("koumis", "Wrong login...");
 
+                    sharedPref.edit().remove("id").commit();
+                    sharedPref.edit().remove("username").commit();
+                    sharedPref.edit().remove("email").commit();
+                    sharedPref.edit().remove("password").commit();
                 }
 
             } catch (JSONException e) {
