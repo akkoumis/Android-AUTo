@@ -12,22 +12,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
-    private Connection mysqlConnection;
+    private Connection conn = null;
+    private Statement stmt = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,93 +66,50 @@ public class MainActivity extends AppCompatActivity
 
     private void login() {
         Log.d("koumis", "Executing SELECT...");
-        Statement statement = mysqlConnection.createStatement();
-        statement.executeQuery("show schemas", new IResultInterface() {
-            @Override
-            public void executionComplete(ResultSet resultSet) {
-                //Toast toast = Toast.makeText(getApplicationContext(), "Number of rows = " + resultSet.getNumRows(), Toast.LENGTH_SHORT);
-                //toast.show();
-                Log.d("koumis", "Select query Num of rows = " + resultSet.getNumRows());
-            }
 
-            @Override
-            public void handleInvalidSQLPacketException(InvalidSQLPacketException ex) {
-                Log.e("koumis", "InvalidSQLPacketException Error");
-            }
-
-            @Override
-            public void handleMySQLException(MySQLException ex) {
-                Log.e("koumis", "MySQLException Error");
-
-            }
-
-            @Override
-            public void handleIOException(IOException ex) {
-                Log.e("koumis", "IOException Error");
-
-            }
-
-            @Override
-            public void handleMySQLConnException(MySQLConnException ex) {
-                Log.e("koumis", "MySQLConnException Error");
-
-            }
-
-            @Override
-            public void handleException(Exception ex) {
-                Log.e("koumis", "Exception Error");
-
-            }
-
-        });
     }
 
     private void connectToDB() {
-        Log.d("koumis", "DB Connecting...");
 
-        mysqlConnection = new Connection("10.0.2.2", "root",
-                "root", 3306, "authauto", new IConnectionInterface() {
-            @Override
-            public void actionCompleted() {
-                //You are now connected to the database
-                //Toast toast = Toast.makeText(getApplicationContext(), "DB Connected", Toast.LENGTH_SHORT);
-                //toast.show();
-                Log.d("koumis", "DB Connected!");
-                login();
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Log.d("koumis", "DB Connecting...");
+            conn = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/authauto","root","root");
+
+            //STEP 4: Execute a query
+            Log.d("koumis","Creating statement...");
+            stmt = conn.createStatement();
+            String sql;
+            sql = "show schemas";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                Log.d("koumis",rs.getString(0));
             }
 
-            @Override
-            public void handleInvalidSQLPacketException(InvalidSQLPacketException e) {
-                //Handle the error
-            }
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            Log.d("koumis","SQLException Error");
 
-            @Override
-            public void handleMySQLException(MySQLException e) {
-                //Handle the error
-            }
+        }catch(Exception e){
+            //Handle errors for Class.forName
+            Log.d("koumis","Exception Error");
 
-            @Override
-            public void handleIOException(IOException e) {
-                //Handle the error
-            }
+        }finally{
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }//end finally try
+        }//end try
 
-            @Override
-            public void handleMySQLConnException(MySQLConnException e) {
-                //Handle the error
-                Log.e("koumis", "Connection Error");
-            }
-
-            @Override
-            public void handleException(Exception e) {
-                //Handle the error
-            }
-        });
-        //The below line isn't required, however, the MySQL action, whether connecting or executing a statement
-        //(basically anything that uses the this connection object) does its action in a thread, so the call
-        //back you receive will still be in its thread. If you are performing a GUI operation in your callback you need to
-        //switch the main thread. You can either do this yourself when required, or pass true as the first parameter
-        //so that when you receive the call back it is already switched to the main thread
-        mysqlConnection.returnCallbackToMainThread(true, MainActivity.this);
     }
 
     @Override
