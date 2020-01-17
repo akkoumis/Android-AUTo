@@ -59,6 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         emailText = (EditText) findViewById(R.id.emailText);
         passwordText = (EditText) findViewById(R.id.passwordText);
 
+        sharedPref = getApplicationContext().getSharedPreferences("authauto", MODE_PRIVATE);
+        if(sharedPref.contains("email"))
+            emailText.setText(sharedPref.getString("email",""));
+        if(sharedPref.contains("password"))
+            passwordText.setText(sharedPref.getString("password",""));
 
     }
 
@@ -77,7 +82,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void register(View v) {
+        Log.d("koumis", "Starting Register Activity...");
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        startActivity(intent);
     }
 
 
@@ -119,7 +128,6 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("koumis", "Code = " + requestCode);
             Log.d("koumis", s);
             progressBar.setVisibility(GONE);
-            sharedPref = getApplicationContext().getSharedPreferences("authauto", MODE_PRIVATE);
             //sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
 
             try {

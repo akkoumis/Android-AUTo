@@ -11,4 +11,5 @@
     <string name="title_activity_main">Select Ride</string>
     <string name="action_add_vehicle">Add Vehicle</string>
     <string name="title_activity_login">Login or Register</string>
+    <string name="title_activity_register">Register</string>
 </resources>
