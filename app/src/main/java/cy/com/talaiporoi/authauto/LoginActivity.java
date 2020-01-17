@@ -67,6 +67,20 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        sharedPref = getApplicationContext().getSharedPreferences("authauto", MODE_PRIVATE);
+        if(sharedPref.contains("email"))
+            emailText.setText(sharedPref.getString("email",""));
+        else
+            emailText.setText("");
+        if(sharedPref.contains("password"))
+            passwordText.setText(sharedPref.getString("password",""));
+        else
+            passwordText.setText("");
+    }
+
     public void login(View v) {
         String emailString = sqlEscapeString(emailText.getText().toString()),
                 passwordString = sqlEscapeString(passwordText.getText().toString());
@@ -150,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Log.d("koumis", "Starting Main Activity...");
                     Intent intent = new Intent(context, MainActivity.class);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     //intent.putExtra("id", object.getString("id"));
                     //intent.putExtra("username", object.getString("username"));
