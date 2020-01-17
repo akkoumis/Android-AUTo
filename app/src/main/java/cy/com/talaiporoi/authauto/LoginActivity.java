@@ -1,11 +1,15 @@
 package cy.com.talaiporoi.authauto;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton, registerButton;
     private EditText emailText, passwordText;
     private ConstraintLayout constraintLayout;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +52,13 @@ public class LoginActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
-        constraintLayout= (ConstraintLayout)findViewById(R.id.loginConstraintLayout);
+        constraintLayout = (ConstraintLayout) findViewById(R.id.loginConstraintLayout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         loginButton = (Button) findViewById(R.id.loginButton);
         registerButton = (Button) findViewById(R.id.registerButton);
         emailText = (EditText) findViewById(R.id.emailText);
         passwordText = (EditText) findViewById(R.id.passwordText);
+
 
     }
 
@@ -65,13 +70,16 @@ public class LoginActivity extends AppCompatActivity {
 
         String url = Api.URL_READ_LOGIN + "&email=" + emailString + "&password=" + passwordString;
         Log.d("koumis", "URL: " + url);
-        PerformNetworkRequest request = new PerformNetworkRequest(url, null, CODE_GET_REQUEST);
+        PerformNetworkRequest request = new PerformNetworkRequest(url, null, CODE_GET_REQUEST, getApplicationContext());
         request.execute();
+
+
     }
 
     public void register(View v) {
 
     }
+
 
     //inner class to perform network request extending an AsyncTask
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
@@ -84,12 +92,14 @@ public class LoginActivity extends AppCompatActivity {
 
         //the request code to define whether it is a GET or POST
         int requestCode;
+        Context context;
 
         //constructor to initialize values
-        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
+        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode, Context context) {
             this.url = url;
             this.params = params;
             this.requestCode = requestCode;
+            this.context = context;
         }
 
         //when the task started displaying a progressbar
@@ -109,37 +119,56 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("koumis", "Code = " + requestCode);
             Log.d("koumis", s);
             progressBar.setVisibility(GONE);
+            sharedPref = getApplicationContext().getSharedPreferences("authauto", MODE_PRIVATE);
+            //sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
 
             try {
-                SharedPreferences sharedPref;
-                sharedPref = getSharedPreferences("authauto", MODE_PRIVATE);
                 JSONObject object = new JSONObject(s);
                 if (!object.isNull("customer")) {
+
                     //if (requestCode == CODE_GET_REQUEST) {
                     Log.d("koumis", "Login successful!");
                     Snackbar snackbar = Snackbar
                             .make(constraintLayout, "Login Successful!", Snackbar.LENGTH_LONG);
                     snackbar.show();
 
-                    sharedPref.edit().putString("id", object.getString("id")).commit();
-                    sharedPref.edit().putString("username", object.getString("username")).commit();
-                    sharedPref.edit().putString("email", object.getString("email")).commit();
-                    sharedPref.edit().putString("password", object.getString("password")).commit();
-                    //}
-                    //refreshing the herolist after every operation
-                    //so we get an updated list
-                    //we will create this method right now it is commented
-                    //because we haven't created it yet
-                    //refreshHeroList(object.getJSONArray("heroes"));
+                    Log.d("koumis", "Saving user data...");
+                    //Log.d("koumis", "id = " + object.getJSONObject("customer").getString("id"));
+                    sharedPref.edit().putString("id", object.getJSONObject("customer").getString("id")).apply();
+                    sharedPref.edit().putString("username", object.getJSONObject("customer").getString("username")).apply();
+                    sharedPref.edit().putString("email", object.getJSONObject("customer").getString("email")).apply();
+                    sharedPref.edit().putString("password", object.getJSONObject("customer").getString("password")).apply();
+                    sharedPref.edit().putBoolean("loginSuccessful", true).apply();
+
+                    Log.d("koumis", "Starting Main Activity...");
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //intent.putExtra("id", object.getString("id"));
+                    //intent.putExtra("username", object.getString("username"));
+                    //intent.putExtra("email", object.getString("email"));
+                    //intent.putExtra("password", object.getString("password"));
+                    getApplicationContext().startActivity(intent);
+
                 } else {
                     Log.d("koumis", "Wrong login...");
 
-                    sharedPref.edit().remove("id").commit();
-                    sharedPref.edit().remove("username").commit();
-                    sharedPref.edit().remove("email").commit();
-                    sharedPref.edit().remove("password").commit();
-                }
+                    sharedPref.edit().remove("id").apply();
+                    sharedPref.edit().remove("username").apply();
+                    sharedPref.edit().remove("email").apply();
+                    sharedPref.edit().remove("password").apply();
+                    sharedPref.edit().remove("loginSuccessful").apply();
 
+                    AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+                    alertDialog.setTitle("Login not completed");
+                    alertDialog.setMessage("Please check the email address and the password. Then, try again.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

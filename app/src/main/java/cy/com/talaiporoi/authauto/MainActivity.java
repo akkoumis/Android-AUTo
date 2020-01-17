@@ -1,6 +1,7 @@
 package cy.com.talaiporoi.authauto;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,8 +30,9 @@ import java.sql.Statement;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
-    private Connection conn = null;
-    private Statement stmt = null;
+    private SharedPreferences sharedPref;
+    private String id, username, email, password;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +63,15 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);*/
 
-
-
+        sharedPref = getApplicationContext().getSharedPreferences("authauto", MODE_PRIVATE);
+        id = sharedPref.getString("id", "");
+        username = sharedPref.getString("username", "");
+        email = sharedPref.getString("email", "");
+        TextView emailTextView, usernameTextView;
+        emailTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_email_text_view);
+        usernameTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_username_text_view);
+        emailTextView.setText(email);
+        usernameTextView.setText(username);
     }
 
 

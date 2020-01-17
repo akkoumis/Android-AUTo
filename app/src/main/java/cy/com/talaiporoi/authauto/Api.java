@@ -1,7 +1,6 @@
 package cy.com.talaiporoi.authauto;
 
 public class Api {
-
     private static final String ROOT_URL = "http://10.0.2.2/authauto/v1/Api.php?apicall=";
 
     public static final String URL_CREATE_CUSTOMER = ROOT_URL + "createcustomer";

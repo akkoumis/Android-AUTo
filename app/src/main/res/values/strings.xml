@@ -2,8 +2,8 @@
     <string name="app_name">AUTh AUTo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Αναστάσιος Κουμής</string>
-    <string name="nav_header_subtitle">akkoumis@ece.auth.gr</string>
+    <string name="nav_header_title">Username</string>
+    <string name="nav_header_subtitle">E-mail</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_my_vehicles">My Vehicles</string>
