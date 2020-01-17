@@ -41,5 +41,5 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //implementation files('libs/mysql-connector-java-5.1.48-bin.jar')
-    implementation files('libs/mysql-connector-java-8.0.19.jar')
+    //implementation files('libs/mysql-connector-java-8.0.19.jar')
 }

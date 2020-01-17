@@ -81,10 +81,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void register(View v) {
+    public void registerActivity(View v) {
         Log.d("koumis", "Starting Register Activity...");
         Intent intent = new Intent(this, RegisterActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         startActivity(intent);
     }
