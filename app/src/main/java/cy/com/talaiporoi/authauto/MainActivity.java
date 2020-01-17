@@ -128,6 +128,15 @@ public class MainActivity extends AppCompatActivity
 
             startActivity(intent);
         }
+        if (id == R.id.menu_log_out) {
+            sharedPref.edit().remove("id").apply();
+            sharedPref.edit().remove("username").apply();
+            sharedPref.edit().remove("email").apply();
+            sharedPref.edit().remove("password").apply();
+            sharedPref.edit().remove("loginSuccessful").apply();
+
+            super.onBackPressed();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
